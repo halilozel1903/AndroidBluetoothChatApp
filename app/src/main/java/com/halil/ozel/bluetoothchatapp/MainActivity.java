@@ -26,26 +26,50 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Button tanımlamaları
      Button listen, send, listDevices;
+
+     // listview tanımı
      ListView listView;
-     TextView msg_box, status;
-     EditText writeMsg;
 
+     // textview tanımlamaları
+     TextView messageBox, status;
+
+     // edittext tanımı
+     EditText writeMessage;
+
+     // bluetoothadapter
      BluetoothAdapter bluetoothAdapter;
-     BluetoothDevice [] btArray;
+
+     // BluetoothDevice array tanımı
+     BluetoothDevice [] bluetoothDevices;
 
 
+     // sendReceive değişkeni
      SendReceive sendReceive;
 
+     // STATE_LISTENING sabit değeri
      static final int STATE_LISTENING = 1;
+
+    // STATE_CONNECTING sabit değeri
      static final int STATE_CONNECTING = 2;
+
+    // STATE_CONNECTED sabit değeri
      static final int STATE_CONNECTED = 3;
+
+    // STATE_CONNECTION_FAILED sabit değeri
      static final int STATE_CONNECTION_FAILED = 4;
+
+    // STATE_MESSAGE_RECEIVED sabit değeri
      static final int STATE_MESSAGE_RECEIVED = 5;
 
+     // REQUEST_ENABLE_BLUETOOTH değeri tanımı ve değeri
      int REQUEST_ENABLE_BLUETOOTH = 1;
 
+     // app name değeri
      private static final String APP_NAME = "BluetoothChatApp";
+
+     // uuid değeri değeri
      private static final UUID MY_UUID = UUID.fromString("318c6089-985c-4773-b7ca-4c6130e4209e");
 
 
@@ -55,12 +79,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       findViewByIdes();
-        
+        // findViewById değerlerini gosterme işlemleri
+        listen = findViewById(R.id.listen);
+        send = findViewById(R.id.send);
+        listDevices = findViewById(R.id.listDevices);
+        listView = findViewById(R.id.listview);
+        status = findViewById(R.id.status);
+        messageBox = findViewById(R.id.msg);
+        writeMessage = findViewById(R.id.writemsg);
+
+        // adapter nesnesiyle bluetooth aygıtına erişim
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
+        // bluetoothAdapter değeri açık değilse
         if (!bluetoothAdapter.isEnabled()){
 
+            // bluetooth iznini kullanıcıdan istiyoruz.
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableIntent,REQUEST_ENABLE_BLUETOOTH);
         }
@@ -68,34 +102,43 @@ public class MainActivity extends AppCompatActivity {
         implementListeners();
     }
 
-    private void findViewByIdes(){
 
-        listen = findViewById(R.id.listen);
-        send = findViewById(R.id.send);
-        listDevices = findViewById(R.id.listDevices);
-        listView = findViewById(R.id.listview);
-        status = findViewById(R.id.status);
-        msg_box = findViewById(R.id.msg);
-        writeMsg = findViewById(R.id.writemsg);
-    }
 
+    // implementListeners adında bir function
     private void implementListeners() {
 
+
+
+        // listelemeye tıklayınca neler olacak
         listDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Set<BluetoothDevice> bt = bluetoothAdapter.getBondedDevices();
-                String[] strings = new String[bt.size()];
-                btArray =new BluetoothDevice[bt.size()];
+                // devices cihazların listelendiği
+                Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
+
+                // cihazların değeri kadar al ve diziye ata
+                String[] strings = new String[devices.size()];
+
+                // bluetoothDevices size değerini ata
+                bluetoothDevices =new BluetoothDevice[devices.size()];
+
+                // index değeri 0 olarak verdik.
                 int index=0;
 
-                if (bt.size()>0){
+                // cihazlarının boyutu 0 dan büyükse
+                if (devices.size()>0){
 
-                    for (BluetoothDevice device : bt){
+                    // loop ile cihazları döndür.
+                    for (BluetoothDevice device : devices){
 
-                        btArray[index] = device;
+                        // bluetoothDevices index değerine device ata
+                        bluetoothDevices[index] = device;
+
+                        // isimleri index değerine koy
                         strings[index] = device.getName();
+
+                        // index değerini arttır
                         index++;
                     }
 
@@ -106,58 +149,105 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        // listen butonuna tıklanınca neler olacak
         listen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                // ServerClass oluşturma
                 ServerClass serverClass = new ServerClass();
+
+                // serverclass başlat
                 serverClass.start();
             }
         });
 
 
+        // listviewe tıklanınca neler olacak
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                ClientClass clientClass = new ClientClass(btArray[i]);
+
+                // ClientClass oluşturma
+                ClientClass clientClass = new ClientClass(bluetoothDevices[i]);
+
+                // clientClass başlat
                 clientClass.start();
 
+
+                // text değerini yaz
                 status.setText("Connecting");
             }
         });
 
+
+        // send butonuna basınca neler olacak
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String string = String.valueOf(writeMsg.getText());
+
+                // mesajın değerini al
+                String string = String.valueOf(writeMessage.getText());
+
+                // mesajı bytes halinde yolla
                 sendReceive.write(string.getBytes());
             }
         });
 
     }
 
+    // Handler değişkeni tanımlama
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
 
+            // Handler : UI Thread ile haberleşmeyi sağlayan bir sınıftır.
             switch (msg.what){
 
+                // what : kullanıcı tanımlı mesaj kodudur.
+                // Bu mesajın neyle ilgili olduğuna kullanıcı karar verebilir.
+                // int tipinde tanımlanır.
+
+                // STATE_LISTENING değeriyse
                 case STATE_LISTENING:
+
+                    // Listening texti yaz
                     status.setText("Listening");
                     break;
+
+                // STATE_CONNECTING değeriyse
                 case STATE_CONNECTING:
+
+                    // Connecting texti yaz
                     status.setText("Connecting");
                     break;
+
+                // STATE_CONNECTED değeriyse
                 case STATE_CONNECTED:
+
+                    // Connected texti yaz
                     status.setText("Connected");
                     break;
+
+                // STATE_CONNECTION_FAILED değeriyse
                 case STATE_CONNECTION_FAILED:
+
+                    // Connection Failed texti yaz
                     status.setText("Connection Failed");
                     break;
+
+                // STATE_MESSAGE_RECEIVED değeriyse
                 case STATE_MESSAGE_RECEIVED:
-                    byte[] readBuff = (byte[]) msg.obj;
-                    String tempMsg = new String(readBuff,0,msg.arg1);
-                    msg_box.setText(tempMsg);
+
+                    // readBuffer değişkeni mesaj objesini al
+                    byte[] readBuffer = (byte[]) msg.obj;
+
+                    // tempMessage değişkine değerler işleniyor
+                    String tempMessage = new String(readBuffer,0,msg.arg1);
+
+                    // messageBox değerine mesajları yaz
+                    messageBox.setText(tempMessage);
 
                     break;
             }
@@ -165,6 +255,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     });
+
+
+
 
     private class ServerClass extends Thread{
 
