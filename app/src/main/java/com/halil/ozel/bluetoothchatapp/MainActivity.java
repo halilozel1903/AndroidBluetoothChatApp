@@ -259,46 +259,79 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    // ServerClass sınıfında yapılacak işlemler
     private class ServerClass extends Thread{
 
+        // BluetoothServerSocket nesnesi
         private BluetoothServerSocket serverSocket;
 
+        // ServerClass yapıcı fonksiyonu
         public ServerClass(){
 
             try{
+                // serverSocket değerine uuid değerini kayıtla
                 serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(APP_NAME,MY_UUID);
+
+                // IOException yakalama
             }catch (IOException e){
                 e.printStackTrace();
             }
         }
 
+
+        // run fonksiyonunun işlemleri
         public void run(){
 
+            // BluetoothSocket nesnesine null verildi.
             BluetoothSocket socket = null;
 
+            // socket değeri null ise
             while (socket == null){
 
                 try{
 
+                    // Alınan mesajı istediğimiz değerleri verebiliriz.
                     Message message = Message.obtain();
+
+                    // bağlantı oluştuğunda
                     message.what = STATE_CONNECTING;
+
+                    // mesajı yollama işi
                     handler.sendMessage(message);
+
+                    // socket işini kabul et
                     socket = serverSocket.accept();
+
                 } catch (IOException e) {
                     e.printStackTrace();
+
+                    // mesaj örneğini alma işi
                     Message message = Message.obtain();
+
+                    // STATE_CONNECTION_FAILED olayı olunca
                     message.what = STATE_CONNECTION_FAILED;
+
+                    // mesajı yollama
                     handler.sendMessage(message);
                 }
 
+                // socket değeri null değilse
                 if (socket!=null){
 
+                    // Alınan mesajı istediğimiz değerleri verebiliriz.
                     Message message = Message.obtain();
+
+                    // bağlantı oluştuğunu anlama işi
                     message.what = STATE_CONNECTED;
+
+                    // mesajı yollama işini handler ile yap
                     handler.sendMessage(message);
 
 
+                    // sendReceive nesnesi tanımı
                     sendReceive = new SendReceive(socket);
+
+                    // sendReceive işini başlat
                     sendReceive.start();
 
 
@@ -310,39 +343,64 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // ClientClass sınıfında yapılacak işlemler
     private class ClientClass extends Thread{
 
+        // BluetoothDevice nesnesi
         private BluetoothDevice device;
+
+        // BluetoothSocket nesnesi
         private BluetoothSocket socket;
 
 
+        // ClientClass yapıcı sınıfı
         public ClientClass(BluetoothDevice device1){
 
+            // nesneye device değerine device1'i ata
             device = device1;
 
             try{
+                // uuid değerine socket işine ata
                 socket = device.createRfcommSocketToServiceRecord(MY_UUID);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
+        // run fonksiyonunda yapılacak işler
         public void run(){
 
             try {
+
+                // socket'i connect et.
                 socket.connect();
+
+                // bir mesaj örneği alabilmek için bu metot kullanılır. Alınan mesaja istediğimiz değerler verilir.
                 Message message = Message.obtain();
+
+                // kullanıcı tanımlı mesaj kodudur. Int tipinde tanımlanır.
                 message.what = STATE_CONNECTED;
+
+                // mesaj kuyruğunun sonuna bir mesaj eklemeyi sağlar.
                 handler.sendMessage(message);
 
+                // sendReceive nesnesi işlemi
                 sendReceive = new SendReceive(socket);
+
+                // sendReceive başlat
                 sendReceive.start();
 
             } catch (IOException e) {
                 e.printStackTrace();
 
+                // Alınan message istediğimiz değerler verilir.
                 Message message = Message.obtain();
+
+                // eğer fail olduysa değer
                 message.what = STATE_CONNECTION_FAILED;
+
+                // handler sendmessage işlemi
                 handler.sendMessage(message);
             }
         }
@@ -351,49 +409,79 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    // SendReceive sınıfı
     private class SendReceive extends Thread{
 
+        // BluetoothSocket değişkeni
         private final BluetoothSocket bluetoothSocket;
+
+        // InputStream değişkeni
         private final InputStream inputStream;
+
+        // OutputStream değişkeni
         private final OutputStream outputStream;
 
+        // SendReceive constructor
         public SendReceive(BluetoothSocket socket){
 
+            // socket'i atadık.
             bluetoothSocket = socket;
-            InputStream tempIn = null;
-            OutputStream tempOut = null;
+
+            // tempInput null değeri
+            InputStream tempInput = null;
+
+            // tempOutput null değeri
+            OutputStream tempOutput = null;
 
             try {
-                tempIn = bluetoothSocket.getInputStream();
-                tempOut = bluetoothSocket.getOutputStream();
+                // tempInput getInputStream metodu
+                tempInput = bluetoothSocket.getInputStream();
+
+                // tempOutput getOutputStream metodu
+                tempOutput = bluetoothSocket.getOutputStream();
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            inputStream = tempIn;
-            outputStream = tempOut;
+            // inputStream değerine tempInput değerini ata
+            inputStream = tempInput;
+
+            // outputStream değerine tempOutput değerini ata
+            outputStream = tempOutput;
         }
 
+        // run fonksiyonunda yapılacak işler
         public void run(){
 
+            // buffer nesnesi oluşturma
             byte [] buffer = new byte[1024];
+
+            // bytes değişkeni
             int bytes;
 
+            // true değeri döndükçe
             while (true){
 
                 try {
+                    // bytes değişkenine read buffer yap.
                     bytes = inputStream.read(buffer);
+
+                    // parametreleri tutan bir mesaj oluşturmak için kullanılır.
                     handler.obtainMessage(STATE_MESSAGE_RECEIVED,bytes,-1,buffer).sendToTarget();
+
+                   // hatayı yakalama işlemi
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }
 
+        // write işleminin yapıldığı function
         public void write (byte[] bytes){
 
             try {
+                // outputStream değerini yaz
                 outputStream.write(bytes);
             } catch (IOException e) {
                 e.printStackTrace();
