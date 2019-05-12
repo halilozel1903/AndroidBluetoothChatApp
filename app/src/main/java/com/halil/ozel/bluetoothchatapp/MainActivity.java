@@ -96,9 +96,12 @@ public class MainActivity extends AppCompatActivity {
 
             // bluetooth iznini kullanıcıdan istiyoruz.
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+
+            // enableIntent işlemi
             startActivityForResult(enableIntent,REQUEST_ENABLE_BLUETOOTH);
         }
-        
+
+        // implementListeners metodun çağrılması
         implementListeners();
     }
 
@@ -142,7 +145,10 @@ public class MainActivity extends AppCompatActivity {
                         index++;
                     }
 
+                    // adapter nesnesi tanımlandı.
                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,strings);
+
+                    // listview'e adapteri ata
                     listView.setAdapter(arrayAdapter);
                 }
 
@@ -249,9 +255,11 @@ public class MainActivity extends AppCompatActivity {
                     // messageBox değerine mesajları yaz
                     messageBox.setText(tempMessage);
 
+                    // işlemi bitir.
                     break;
             }
 
+            // değeri true döndür
             return true;
         }
     });
@@ -274,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // IOException yakalama
             }catch (IOException e){
+                // hatayı bastır
                 e.printStackTrace();
             }
         }
@@ -334,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
                     // sendReceive işini başlat
                     sendReceive.start();
 
-
+                    // işlemi kırk bırak
                     break;
                 }
 
@@ -363,7 +372,9 @@ public class MainActivity extends AppCompatActivity {
                 // uuid değerine socket işine ata
                 socket = device.createRfcommSocketToServiceRecord(MY_UUID);
 
+                // hatayı yakala
             } catch (IOException e) {
+                // hatayı yazdır
                 e.printStackTrace();
             }
         }
@@ -472,6 +483,7 @@ public class MainActivity extends AppCompatActivity {
 
                    // hatayı yakalama işlemi
                 } catch (IOException e) {
+                    // hatayı yazdır
                     e.printStackTrace();
                 }
             }
@@ -483,7 +495,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 // outputStream değerini yaz
                 outputStream.write(bytes);
+                // hata yakalama
             } catch (IOException e) {
+                // hatayı yazdır
                 e.printStackTrace();
             }
         }
