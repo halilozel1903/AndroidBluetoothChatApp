@@ -1,7 +1,7 @@
 # Android Bluetooth Chat App
 
 Android Bluetooth Chat uygulaması Java diliyle yazılmış bir uygulamadır.<br>
-Bluetooth yapısını öğrenmek için chat ile senkronize edilerek ortaya çıkarılan bir projedir.
+Bluetooth yapısını öğrenmek için chat ile senkronize edilerek ortaya çıkarılan bir projedir. <br> <br>
 
 ## Bluetooth Nedir?
 
@@ -11,4 +11,12 @@ Android işletim sistemi, Bluetooth ile ağ işlemlerini desteklemektedir. Cihaz
 
 Android Bluetooth API’lerini kullanarak, Bluetooth ile ilgili fonksiyonlarına rahatlıkla erişebiliriz.
 
-Bluetooth API’si kullanarak diğer cihazlara bağlanılmasını sağlar.
+Bluetooth API’si kullanarak diğer cihazlara bağlanılmasını sağlar. <br>
+
+## Bluetooth API’lerini kullanarak neler yapabiliriz ?
+
+- Diğer Bluetooth cihazlarını tarama
+- Cihaz ile eşleştirilen Bluetooth cihazlarını sorgulama
+- Diğer cihazlarla veri transferlerini yapma
+- Servislerle diğer cihazlara bağlanma
+- Birden fazla kablosuz bağlantıları yönetme
