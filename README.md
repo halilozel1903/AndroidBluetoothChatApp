@@ -13,7 +13,7 @@ Bluetooth is a wireless communication technology that enables the wireless trans
 
 2. By using Android Bluetooth APIs, we can easily access Bluetooth related functions.
 
-3. It allows to connect to other devices using the Bluetooth API. <br> <br>
+3. It allows to connect to other devices using the Bluetooth API.
 
 
 ## What can we do using Bluetooth APIs ❓
@@ -37,7 +37,7 @@ Bluetooth is a wireless communication technology that enables the wireless trans
 ```
 MIT License
 
-Copyright (c) 2021 Halil OZEL
+Copyright (c) 2022 Halil OZEL
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
