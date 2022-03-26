@@ -1,5 +1,6 @@
 package com.halil.ozel.bluetoothchatapp;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -7,7 +8,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,11 +116,12 @@ public class MainActivity extends AppCompatActivity {
 
         // listelemeye tıklayınca neler olacak
         listDevices.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onClick(View v) {
 
                 // devices cihazların listelendiği
-                Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
+                @SuppressLint("MissingPermission") Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
 
                 // cihazların değeri kadar al ve diziye ata
                 String[] strings = new String[devices.size()];
@@ -274,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
         private BluetoothServerSocket serverSocket;
 
         // ServerClass yapıcı fonksiyonu
+        @SuppressLint("MissingPermission")
         public ServerClass(){
 
             try{
@@ -295,7 +299,7 @@ public class MainActivity extends AppCompatActivity {
             BluetoothSocket socket = null;
 
             // socket değeri null ise
-            while (socket == null){
+            while (true){
 
                 try{
 
@@ -363,6 +367,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // ClientClass yapıcı sınıfı
+        @SuppressLint("MissingPermission")
         public ClientClass(BluetoothDevice device1){
 
             // nesneye device değerine device1'i ata
@@ -380,6 +385,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // run fonksiyonunda yapılacak işler
+        @SuppressLint("MissingPermission")
         public void run(){
 
             try {
