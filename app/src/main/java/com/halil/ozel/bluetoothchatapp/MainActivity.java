@@ -1,14 +1,19 @@
 package com.halil.ozel.bluetoothchatapp;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,51 +33,50 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
 
     // Button tanımlamaları
-     Button listen, send, listDevices;
+    Button listen, send, listDevices;
 
-     // listview tanımı
-     ListView listView;
+    // listview tanımı
+    ListView listView;
 
-     // textview tanımlamaları
-     TextView messageBox, status;
+    // textview tanımlamaları
+    TextView messageBox, status;
 
-     // edittext tanımı
-     EditText writeMessage;
+    // edittext tanımı
+    EditText writeMessage;
 
-     // bluetoothadapter
-     BluetoothAdapter bluetoothAdapter;
+    // bluetoothadapter
+    BluetoothAdapter bluetoothAdapter;
 
-     // BluetoothDevice array tanımı
-     BluetoothDevice [] bluetoothDevices;
+    // BluetoothDevice array tanımı
+    BluetoothDevice[] bluetoothDevices;
 
 
-     // sendReceive değişkeni
-     SendReceive sendReceive;
+    // sendReceive değişkeni
+    SendReceive sendReceive;
 
-     // STATE_LISTENING sabit değeri
-     static final int STATE_LISTENING = 1;
+    // STATE_LISTENING sabit değeri
+    static final int STATE_LISTENING = 1;
 
     // STATE_CONNECTING sabit değeri
-     static final int STATE_CONNECTING = 2;
+    static final int STATE_CONNECTING = 2;
 
     // STATE_CONNECTED sabit değeri
-     static final int STATE_CONNECTED = 3;
+    static final int STATE_CONNECTED = 3;
 
     // STATE_CONNECTION_FAILED sabit değeri
-     static final int STATE_CONNECTION_FAILED = 4;
+    static final int STATE_CONNECTION_FAILED = 4;
 
     // STATE_MESSAGE_RECEIVED sabit değeri
-     static final int STATE_MESSAGE_RECEIVED = 5;
+    static final int STATE_MESSAGE_RECEIVED = 5;
 
-     // REQUEST_ENABLE_BLUETOOTH değeri tanımı ve değeri
-     int REQUEST_ENABLE_BLUETOOTH = 1;
+    // REQUEST_ENABLE_BLUETOOTH değeri tanımı ve değeri
+    int REQUEST_ENABLE_BLUETOOTH = 1;
 
-     // app name değeri
-     private static final String APP_NAME = "BluetoothChatApp";
+    // app name değeri
+    private static final String APP_NAME = "BluetoothChatApp";
 
-     // uuid değeri değeri
-     private static final UUID MY_UUID = UUID.fromString("318c6089-985c-4773-b7ca-4c6130e4209e");
-
+    // uuid değeri değeri
+    private static final UUID MY_UUID = UUID.fromString("318c6089-985c-4773-b7ca-4c6130e4209e");
 
 
     @SuppressLint("MissingPermission")
@@ -94,13 +98,13 @@ public class MainActivity extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         // bluetoothAdapter değeri açık değilse
-        if (!bluetoothAdapter.isEnabled()){
+        if (!bluetoothAdapter.isEnabled()) {
 
             // bluetooth iznini kullanıcıdan istiyoruz.
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 
             // enableIntent işlemi
-            startActivityForResult(enableIntent,REQUEST_ENABLE_BLUETOOTH);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BLUETOOTH);
         }
 
         // implementListeners metodun çağrılması
@@ -108,10 +112,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     // implementListeners adında bir function
     private void implementListeners() {
-
 
 
         // listelemeye tıklayınca neler olacak
@@ -127,16 +129,16 @@ public class MainActivity extends AppCompatActivity {
                 String[] strings = new String[devices.size()];
 
                 // bluetoothDevices size değerini ata
-                bluetoothDevices =new BluetoothDevice[devices.size()];
+                bluetoothDevices = new BluetoothDevice[devices.size()];
 
                 // index değeri 0 olarak verdik.
-                int index=0;
+                int index = 0;
 
                 // cihazlarının boyutu 0 dan büyükse
-                if (devices.size()>0){
+                if (devices.size() > 0) {
 
                     // loop ile cihazları döndür.
-                    for (BluetoothDevice device : devices){
+                    for (BluetoothDevice device : devices) {
 
                         // bluetoothDevices index değerine device ata
                         bluetoothDevices[index] = device;
@@ -149,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // adapter nesnesi tanımlandı.
-                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1,strings);
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, strings);
 
                     // listview'e adapteri ata
                     listView.setAdapter(arrayAdapter);
@@ -211,55 +213,58 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean handleMessage(Message msg) {
 
-            // Handler : UI Thread ile haberleşmeyi sağlayan bir sınıftır.
-            switch (msg.what){
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // Handler : UI Thread ile haberleşmeyi sağlayan bir sınıftır.
+                switch (msg.what) {
 
-                // what : kullanıcı tanımlı mesaj kodudur.
-                // Bu mesajın neyle ilgili olduğuna kullanıcı karar verebilir.
-                // int tipinde tanımlanır.
+                    // what : kullanıcı tanımlı mesaj kodudur.
+                    // Bu mesajın neyle ilgili olduğuna kullanıcı karar verebilir.
+                    // int tipinde tanımlanır.
 
-                // STATE_LISTENING değeriyse
-                case STATE_LISTENING:
+                    // STATE_LISTENING değeriyse
+                    case STATE_LISTENING:
 
-                    // Listening texti yaz
-                    status.setText("Listening");
-                    break;
+                        // Listening texti yaz
+                        status.setText("Listening");
+                        break;
 
-                // STATE_CONNECTING değeriyse
-                case STATE_CONNECTING:
+                    // STATE_CONNECTING değeriyse
+                    case STATE_CONNECTING:
 
-                    // Connecting texti yaz
-                    status.setText("Connecting");
-                    break;
+                        // Connecting texti yaz
+                        status.setText("Connecting");
+                        break;
 
-                // STATE_CONNECTED değeriyse
-                case STATE_CONNECTED:
+                    // STATE_CONNECTED değeriyse
+                    case STATE_CONNECTED:
 
-                    // Connected texti yaz
-                    status.setText("Connected");
-                    break;
+                        // Connected texti yaz
+                        status.setText("Connected");
+                        break;
 
-                // STATE_CONNECTION_FAILED değeriyse
-                case STATE_CONNECTION_FAILED:
+                    // STATE_CONNECTION_FAILED değeriyse
+                    case STATE_CONNECTION_FAILED:
 
-                    // Connection Failed texti yaz
-                    status.setText("Connection Failed");
-                    break;
+                        // Connection Failed texti yaz
+                        status.setText("Connection Failed");
+                        break;
 
-                // STATE_MESSAGE_RECEIVED değeriyse
-                case STATE_MESSAGE_RECEIVED:
+                    // STATE_MESSAGE_RECEIVED değeriyse
+                    case STATE_MESSAGE_RECEIVED:
 
-                    // readBuffer değişkeni mesaj objesini al
-                    byte[] readBuffer = (byte[]) msg.obj;
+                        // readBuffer değişkeni mesaj objesini al
+                        byte[] readBuffer = (byte[]) msg.obj;
 
-                    // tempMessage değişkine değerler işleniyor
-                    String tempMessage = new String(readBuffer,0,msg.arg1);
+                        // tempMessage değişkine değerler işleniyor
+                        String tempMessage = new String(readBuffer, 0, msg.arg1);
 
-                    // messageBox değerine mesajları yaz
-                    messageBox.setText(tempMessage);
+                        // messageBox değerine mesajları yaz
+                        messageBox.setText(tempMessage);
 
-                    // işlemi bitir.
-                    break;
+                        // işlemi bitir.
+                        break;
+                }
+
             }
 
             // değeri true döndür
@@ -268,24 +273,22 @@ public class MainActivity extends AppCompatActivity {
     });
 
 
-
-
     // ServerClass sınıfında yapılacak işlemler
-    private class ServerClass extends Thread{
+    private class ServerClass extends Thread {
 
         // BluetoothServerSocket nesnesi
         private BluetoothServerSocket serverSocket;
 
         // ServerClass yapıcı fonksiyonu
         @SuppressLint("MissingPermission")
-        public ServerClass(){
+        public ServerClass() {
 
-            try{
+            try {
                 // serverSocket değerine uuid değerini kayıtla
-                serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(APP_NAME,MY_UUID);
+                serverSocket = bluetoothAdapter.listenUsingRfcommWithServiceRecord(APP_NAME, MY_UUID);
 
                 // IOException yakalama
-            }catch (IOException e){
+            } catch (IOException e) {
                 // hatayı bastır
                 e.printStackTrace();
             }
@@ -293,15 +296,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         // run fonksiyonunun işlemleri
-        public void run(){
+        public void run() {
 
             // BluetoothSocket nesnesine null verildi.
             BluetoothSocket socket = null;
 
             // socket değeri null ise
-            while (true){
+            while (true) {
 
-                try{
+                try {
 
                     // Alınan mesajı istediğimiz değerleri verebiliriz.
                     Message message = Message.obtain();
@@ -329,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 // socket değeri null değilse
-                if (socket!=null){
+                if (socket != null) {
 
                     // Alınan mesajı istediğimiz değerleri verebiliriz.
                     Message message = Message.obtain();
@@ -357,7 +360,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // ClientClass sınıfında yapılacak işlemler
-    private class ClientClass extends Thread{
+    private class ClientClass extends Thread {
 
         // BluetoothDevice nesnesi
         private BluetoothDevice device;
@@ -367,15 +370,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         // ClientClass yapıcı sınıfı
-        @SuppressLint("MissingPermission")
-        public ClientClass(BluetoothDevice device1){
+        public ClientClass(BluetoothDevice device1) {
 
             // nesneye device değerine device1'i ata
             device = device1;
 
-            try{
+            try {
                 // uuid değerine socket işine ata
-                socket = device.createRfcommSocketToServiceRecord(MY_UUID);
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    socket = device.createRfcommSocketToServiceRecord(MY_UUID);
+                }
+
 
                 // hatayı yakala
             } catch (IOException e) {
@@ -385,28 +390,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // run fonksiyonunda yapılacak işler
-        @SuppressLint("MissingPermission")
-        public void run(){
+        public void run() {
 
             try {
 
                 // socket'i connect et.
-                socket.connect();
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    socket.connect();
 
-                // bir mesaj örneği alabilmek için bu metot kullanılır. Alınan mesaja istediğimiz değerler verilir.
-                Message message = Message.obtain();
+                    // bir mesaj örneği alabilmek için bu metot kullanılır. Alınan mesaja istediğimiz değerler verilir.
+                    Message message = Message.obtain();
 
-                // kullanıcı tanımlı mesaj kodudur. Int tipinde tanımlanır.
-                message.what = STATE_CONNECTED;
+                    // kullanıcı tanımlı mesaj kodudur. Int tipinde tanımlanır.
+                    message.what = STATE_CONNECTED;
 
-                // mesaj kuyruğunun sonuna bir mesaj eklemeyi sağlar.
-                handler.sendMessage(message);
+                    // mesaj kuyruğunun sonuna bir mesaj eklemeyi sağlar.
+                    handler.sendMessage(message);
 
-                // sendReceive nesnesi işlemi
-                sendReceive = new SendReceive(socket);
+                    // sendReceive nesnesi işlemi
+                    sendReceive = new SendReceive(socket);
 
-                // sendReceive başlat
-                sendReceive.start();
+                    // sendReceive başlat
+                    sendReceive.start();
+                }
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -427,7 +434,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     // SendReceive sınıfı
-    private class SendReceive extends Thread{
+    private class SendReceive extends Thread {
 
         // BluetoothSocket değişkeni
         private final BluetoothSocket bluetoothSocket;
@@ -439,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
         private final OutputStream outputStream;
 
         // SendReceive constructor
-        public SendReceive(BluetoothSocket socket){
+        public SendReceive(BluetoothSocket socket) {
 
             // socket'i atadık.
             bluetoothSocket = socket;
@@ -469,25 +476,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // run fonksiyonunda yapılacak işler
-        public void run(){
+        public void run() {
 
             // buffer nesnesi oluşturma
-            byte [] buffer = new byte[1024];
+            byte[] buffer = new byte[1024];
 
             // bytes değişkeni
             int bytes;
 
             // true değeri döndükçe
-            while (true){
+            while (true) {
 
                 try {
                     // bytes değişkenine read buffer yap.
                     bytes = inputStream.read(buffer);
 
                     // parametreleri tutan bir mesaj oluşturmak için kullanılır.
-                    handler.obtainMessage(STATE_MESSAGE_RECEIVED,bytes,-1,buffer).sendToTarget();
+                    handler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
 
-                   // hatayı yakalama işlemi
+                    // hatayı yakalama işlemi
                 } catch (IOException e) {
                     // hatayı yazdır
                     e.printStackTrace();
@@ -496,7 +503,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // write işleminin yapıldığı function
-        public void write (byte[] bytes){
+        public void write(byte[] bytes) {
 
             try {
                 // outputStream değerini yaz
@@ -509,8 +516,4 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
-
-
-
 }
