@@ -210,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Handler değişkeni tanımlama
     Handler handler = new Handler(new Handler.Callback() {
+        @SuppressLint("SetTextI18n")
         @Override
         public boolean handleMessage(Message msg) {
 
@@ -514,6 +515,5 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
     }
 }
