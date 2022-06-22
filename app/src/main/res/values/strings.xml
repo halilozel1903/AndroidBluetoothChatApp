@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BluetoothChatApp</string>
+    <string name="connecting">Connecting</string>
+    <string name="listening">Listening</string>
+    <string name="connected">Connected</string>
+    <string name="failed">Connection Failed</string>
 </resources>

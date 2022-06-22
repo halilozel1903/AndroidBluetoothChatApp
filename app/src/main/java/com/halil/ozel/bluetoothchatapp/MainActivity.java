@@ -156,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
                     // listview'e adapteri ata
                     listView.setAdapter(arrayAdapter);
                 }
-
             }
         });
 
@@ -165,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
         listen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 // ServerClass oluşturma
                 ServerClass serverClass = new ServerClass();
 
@@ -188,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 // text değerini yaz
-                status.setText("Connecting");
+                status.setText(R.string.connecting);
             }
         });
 
@@ -226,28 +224,28 @@ public class MainActivity extends AppCompatActivity {
                     case STATE_LISTENING:
 
                         // Listening texti yaz
-                        status.setText("Listening");
+                        status.setText(R.string.listening);
                         break;
 
                     // STATE_CONNECTING değeriyse
                     case STATE_CONNECTING:
 
                         // Connecting texti yaz
-                        status.setText("Connecting");
+                        status.setText(R.string.connecting);
                         break;
 
                     // STATE_CONNECTED değeriyse
                     case STATE_CONNECTED:
 
                         // Connected texti yaz
-                        status.setText("Connected");
+                        status.setText(R.string.connected);
                         break;
 
                     // STATE_CONNECTION_FAILED değeriyse
                     case STATE_CONNECTION_FAILED:
 
                         // Connection Failed texti yaz
-                        status.setText("Connection Failed");
+                        status.setText(R.string.failed);
                         break;
 
                     // STATE_MESSAGE_RECEIVED değeriyse
@@ -265,9 +263,7 @@ public class MainActivity extends AppCompatActivity {
                         // işlemi bitir.
                         break;
                 }
-
             }
-
             // değeri true döndür
             return true;
         }
