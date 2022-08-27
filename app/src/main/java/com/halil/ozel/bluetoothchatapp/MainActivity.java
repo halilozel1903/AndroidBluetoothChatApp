@@ -433,9 +433,6 @@ public class MainActivity extends AppCompatActivity {
     // SendReceive sınıfı
     private class SendReceive extends Thread {
 
-        // BluetoothSocket değişkeni
-        private final BluetoothSocket bluetoothSocket;
-
         // InputStream değişkeni
         private final InputStream inputStream;
 
@@ -446,7 +443,7 @@ public class MainActivity extends AppCompatActivity {
         public SendReceive(BluetoothSocket socket) {
 
             // socket'i atadık.
-            bluetoothSocket = socket;
+            // BluetoothSocket değişkeni
 
             // tempInput null değeri
             InputStream tempInput = null;
@@ -456,10 +453,10 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 // tempInput getInputStream metodu
-                tempInput = bluetoothSocket.getInputStream();
+                tempInput = socket.getInputStream();
 
                 // tempOutput getOutputStream metodu
-                tempOutput = bluetoothSocket.getOutputStream();
+                tempOutput = socket.getOutputStream();
 
             } catch (IOException e) {
                 e.printStackTrace();
