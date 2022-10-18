@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     // BluetoothDevice array tanımı
     BluetoothDevice[] bluetoothDevices;
 
-
     // sendReceive değişkeni
     SendReceive sendReceive;
 
@@ -114,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
 
     // implementListeners adında bir function
     private void implementListeners() {
-
-
         // listelemeye tıklayınca neler olacak
         listDevices.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("MissingPermission")
@@ -172,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // listviewe tıklanınca neler olacak
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -183,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
 
                 // clientClass başlat
                 clientClass.start();
-
 
                 // text değerini yaz
                 status.setText(R.string.connecting);
@@ -203,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
                 sendReceive.write(string.getBytes());
             }
         });
-
     }
 
     // Handler değişkeni tanımlama
@@ -291,10 +285,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         // run fonksiyonunun işlemleri
         public void run() {
-
             // BluetoothSocket nesnesine null verildi.
             BluetoothSocket socket = null;
 
@@ -302,7 +294,6 @@ public class MainActivity extends AppCompatActivity {
             while (true) {
 
                 try {
-
                     // Alınan mesajı istediğimiz değerleri verebiliriz.
                     Message message = Message.obtain();
 
@@ -350,7 +341,6 @@ public class MainActivity extends AppCompatActivity {
                     // işlemi kırk bırak
                     break;
                 }
-
             }
         }
     }
@@ -425,8 +415,6 @@ public class MainActivity extends AppCompatActivity {
                 handler.sendMessage(message);
             }
         }
-
-
     }
 
 
