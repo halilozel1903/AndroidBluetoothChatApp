@@ -4,4 +4,9 @@
     <string name="listening">Listening</string>
     <string name="connected">Connected</string>
     <string name="failed">Connection Failed</string>
+    <string name="dinle">Dinle</string>
+    <string name="listele">Listele</string>
+    <string name="durum">Durum</string>
+    <string name="mesaj_alan">Mesaj Alanı</string>
+    <string name="yolla">Yolla</string>
 </resources>
