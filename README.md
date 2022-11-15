@@ -32,6 +32,11 @@ Bluetooth is a wireless communication technology that enables the wireless trans
 
 ![Screenshot](screen-2.png)
 
+## Donation 💸
+
+If this project help 💁 you to develop, you can give me a cup of coffee. ☕
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/halilozel1903)
 
 ## License ℹ️
 ```
