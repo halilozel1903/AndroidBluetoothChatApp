@@ -420,7 +420,6 @@ public class MainActivity extends AppCompatActivity {
 
     // SendReceive sınıfı
     private class SendReceive extends Thread {
-
         // InputStream değişkeni
         private final InputStream inputStream;
 
@@ -459,7 +458,6 @@ public class MainActivity extends AppCompatActivity {
 
         // run fonksiyonunda yapılacak işler
         public void run() {
-
             // buffer nesnesi oluşturma
             byte[] buffer = new byte[1024];
 
@@ -486,7 +484,6 @@ public class MainActivity extends AppCompatActivity {
 
         // write işleminin yapıldığı function
         public void write(byte[] bytes) {
-
             try {
                 // outputStream değerini yaz
                 outputStream.write(bytes);
