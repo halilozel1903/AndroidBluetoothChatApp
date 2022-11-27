@@ -32,46 +32,46 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Button tanımlamaları
+    // Button tanimlamalari
     Button listen, send, listDevices;
 
-    // listview tanımı
+    // ListView tanimi
     ListView listView;
 
-    // textview tanımlamaları
+    // TextView tanimlamalari
     TextView messageBox, status;
 
-    // edittext tanımı
+    // EditText tanimi
     EditText writeMessage;
 
-    // bluetoothadapter
+    // BluetoothAdapter
     BluetoothAdapter bluetoothAdapter;
 
-    // BluetoothDevice array tanımı
+    // BluetoothDevice array tanimi
     BluetoothDevice[] bluetoothDevices;
 
-    // sendReceive değişkeni
+    // SendReceive degiskeni
     SendReceive sendReceive;
 
-    // STATE_LISTENING sabit değeri
+    // STATE_LISTENING sabit degeri
     static final int STATE_LISTENING = 1;
 
-    // STATE_CONNECTING sabit değeri
+    // STATE_CONNECTING sabit degeri
     static final int STATE_CONNECTING = 2;
 
-    // STATE_CONNECTED sabit değeri
+    // STATE_CONNECTED sabit degeri
     static final int STATE_CONNECTED = 3;
 
-    // STATE_CONNECTION_FAILED sabit değeri
+    // STATE_CONNECTION_FAILED sabit degeri
     static final int STATE_CONNECTION_FAILED = 4;
 
-    // STATE_MESSAGE_RECEIVED sabit değeri
+    // STATE_MESSAGE_RECEIVED sabit degeri
     static final int STATE_MESSAGE_RECEIVED = 5;
 
-    // REQUEST_ENABLE_BLUETOOTH değeri tanımı ve değeri
+    // REQUEST_ENABLE_BLUETOOTH degeri tanımı
     int REQUEST_ENABLE_BLUETOOTH = 1;
 
-    // app name değeri
+    // App name degeri
     private static final String APP_NAME = "BluetoothChatApp";
 
     // uuid değeri değeri
