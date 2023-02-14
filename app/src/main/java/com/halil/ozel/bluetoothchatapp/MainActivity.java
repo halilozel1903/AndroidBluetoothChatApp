@@ -330,8 +330,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // mesajı yollama işini handler ile yap
                     handler.sendMessage(message);
-
-
+                    
                     // sendReceive nesnesi tanımı
                     sendReceive = new SendReceive(socket);
 
@@ -355,7 +354,6 @@ public class MainActivity extends AppCompatActivity {
         // BluetoothSocket nesnesi
         private BluetoothSocket socket;
 
-
         // ClientClass yapıcı sınıfı
         public ClientClass(BluetoothDevice device1) {
 
@@ -368,7 +366,6 @@ public class MainActivity extends AppCompatActivity {
                     socket = device.createRfcommSocketToServiceRecord(MY_UUID);
                 }
 
-
                 // hatayı yakala
             } catch (IOException e) {
                 // hatayı yazdır
@@ -378,9 +375,7 @@ public class MainActivity extends AppCompatActivity {
 
         // run fonksiyonunda yapılacak işler
         public void run() {
-
             try {
-
                 // socket'i connect et.
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                     socket.connect();
@@ -401,7 +396,6 @@ public class MainActivity extends AppCompatActivity {
                     sendReceive.start();
                 }
 
-
             } catch (IOException e) {
                 e.printStackTrace();
 
@@ -416,7 +410,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 
     // SendReceive sınıfı
     private class SendReceive extends Thread {
