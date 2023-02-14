@@ -114,13 +114,11 @@ public class MainActivity extends AppCompatActivity {
     // implementListeners adında bir function
     private void implementListeners() {
         // listelemeye tıklayınca neler olacak
-        listDevices.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("MissingPermission")
-            @Override
-            public void onClick(View v) {
+        listDevices.setOnClickListener(v -> {
 
-                // devices cihazların listelendiği
-                @SuppressLint("MissingPermission") Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
+            // devices cihazların listelendiği
+            if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                Set<BluetoothDevice> devices = bluetoothAdapter.getBondedDevices();
 
                 // cihazların değeri kadar al ve diziye ata
                 String[] strings = new String[devices.size()];
@@ -153,49 +151,40 @@ public class MainActivity extends AppCompatActivity {
                     // listview'e adapteri ata
                     listView.setAdapter(arrayAdapter);
                 }
-            }
-        });
 
 
-        // listen butonuna tıklanınca neler olacak
-        listen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // ServerClass oluşturma
-                ServerClass serverClass = new ServerClass();
+                // listen butonuna tıklanınca neler olacak
+                listen.setOnClickListener(v3 -> {
+                    // ServerClass oluşturma
+                    ServerClass serverClass = new ServerClass();
 
-                // serverclass başlat
-                serverClass.start();
-            }
-        });
+                    // serverclass başlat
+                    serverClass.start();
+                });
 
-        // listviewe tıklanınca neler olacak
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+                // listviewe tıklanınca neler olacak
+                listView.setOnItemClickListener((parent, view, i, id) -> {
 
-                // ClientClass oluşturma
-                ClientClass clientClass = new ClientClass(bluetoothDevices[i]);
+                    // ClientClass oluşturma
+                    ClientClass clientClass = new ClientClass(bluetoothDevices[i]);
 
-                // clientClass başlat
-                clientClass.start();
+                    // clientClass başlat
+                    clientClass.start();
 
-                // text değerini yaz
-                status.setText(R.string.connecting);
-            }
-        });
+                    // text değerini yaz
+                    status.setText(R.string.connecting);
+                });
 
 
-        // send butonuna basınca neler olacak
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                // send butonuna basınca neler olacak
+                send.setOnClickListener(v1 -> {
 
-                // mesajın değerini al
-                String string = String.valueOf(writeMessage.getText());
+                    // mesajın değerini al
+                    String string = String.valueOf(writeMessage.getText());
 
-                // mesajı bytes halinde yolla
-                sendReceive.write(string.getBytes());
+                    // mesajı bytes halinde yolla
+                    sendReceive.write(string.getBytes());
+                });
             }
         });
     }
