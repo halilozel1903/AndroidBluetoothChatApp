@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
 
                     // mesajı yollama işini handler ile yap
                     handler.sendMessage(message);
-                    
+
                     // sendReceive nesnesi tanımı
                     sendReceive = new SendReceive(socket);
 
